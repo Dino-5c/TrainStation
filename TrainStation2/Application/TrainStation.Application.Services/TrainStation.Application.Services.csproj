@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\TrainStation.Domain\TrainStation.Domain.csproj" />
+    <ProjectReference Include="..\..\Domain\TrainStation.Repositories.Abstractions\TrainStation.Repositories.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Domain\TrainStation.ValueObjects\TrainStation.ValueObjects.csproj" />
+    <ProjectReference Include="..\TrainStation.Application.Models\TrainStation.Application.Models.csproj" />
+  </ItemGroup>
+
+</Project>
