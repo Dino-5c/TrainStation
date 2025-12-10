@@ -163,7 +163,7 @@ namespace TrainStation.Domain.Entities
             _tariffes.Remove(tariffZone);
             return true;
         }
-        public bool SetDistanceOnTariffZone(Tariffes tariffZone, Distance tariffZoneDistance)
+        /* public bool SetDistanceOnTariffZone(Tariffes tariffZone, Distance tariffZoneDistance)
         {
             if (tariffZone == null) return false;
             if (!_tariffes.Contains(tariffZone)) return false;
@@ -185,6 +185,15 @@ namespace TrainStation.Domain.Entities
             // if (!_tariffes.Contains(tariffZone)) return false;
             if (!tariffZone.SetTariffZoneName(tariffZoneName)) return false;
             return true;
+        } */
+
+        public Tariffes? EditTariffZone(Tariffes tariffZone, TarifZoneNames tarifZoneName, Distance distance, Money price)
+        {
+            if (!_tariffes.Contains(tariffZone)) return null; // Нужно делать проверки на исключения?
+            if (tariffZone == null) return null;
+
+            var isEdit = tariffZone.SetTariffZoneName(tarifZoneName) || tariffZone.SetDistance(distance) || tariffZone.SetPrice(price);
+            return isEdit ? tariffZone : null;
         }
 
         public bool AddBuyer(Buyer buyer)

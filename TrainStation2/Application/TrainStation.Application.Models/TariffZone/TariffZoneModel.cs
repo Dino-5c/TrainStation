@@ -7,7 +7,8 @@ namespace TrainStation.Application.Models.TariffZone
         Guid Id,
         int TarifZoneName,
         decimal Price,
-        int Distance
+        int Distance,
+        Guid AdministratorId
         ) : IModel<Guid>
     {
     }

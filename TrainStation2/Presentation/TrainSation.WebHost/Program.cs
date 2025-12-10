@@ -42,12 +42,12 @@ namespace TrainSation.WebHost
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new InvalidOperationException("Connection string for EmailSenderMicroserviceDbContext is not configured.");
+                throw new InvalidOperationException("Connection string for TrainStationMicroserviceDbContext is not configured.");
             }
 
             builder.Services.AddNpgsql<ApplicationDbContext>(connectionString, options =>
             {
-                options.MigrationsAssembly("NotesService.Infrastructure.EntityFramework");
+                options.MigrationsAssembly("TrainStation.Infrastructure.EntityFramework");
 
             });
 
@@ -57,8 +57,8 @@ namespace TrainSation.WebHost
                     c.SwaggerDoc("v1", new OpenApiInfo
                     {
                         Version = "v1",
-                        Title = "Auction trading API",
-                        Description = "The Auction trading API provides endpoints for auction management. This API allows you to put lots up for bidding and participate in an auction."
+                        Title = "Train station API",
+                        Description = "The Train station API provides endpoints for auction management. This API allows you to put lots up for bidding and participate in an auction."
                     });
                 });
 

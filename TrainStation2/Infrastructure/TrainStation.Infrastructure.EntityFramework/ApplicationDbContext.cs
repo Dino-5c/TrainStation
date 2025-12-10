@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TrainStation.Domain.Entities;
 
 namespace TrainStation.Infrastructure.EntityFramework
