@@ -2,13 +2,14 @@
 
 namespace TrainStation.Application.Models.Ticket
 {
+
     public record class TicketModel(
         Guid Id,
         DateTime BuyDate,
         Guid StartStationId,
         Guid EndStationId,
         Guid BuyerId,
-        string TicketType 
+        TicketType TicketType 
         ) : IModel<Guid>
     {
     }

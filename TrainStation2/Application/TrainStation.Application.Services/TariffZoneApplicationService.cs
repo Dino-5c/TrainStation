@@ -58,7 +58,7 @@ namespace TrainStation.Application.Services
             var administrator = administratorTask.Result;
             var tariffZone = tariffZoneTask.Result;
             var edirtionTariffZone = administrator.EditTariffZone(
-                tariffZone!, // что значит tariffZone!
+                tariffZone!, // tariffZone! значит - элемент существует
                 new(tariffZoneModel.TarifZoneName),
                 new(tariffZoneModel.Distance),
                 new(tariffZoneModel.Price));
