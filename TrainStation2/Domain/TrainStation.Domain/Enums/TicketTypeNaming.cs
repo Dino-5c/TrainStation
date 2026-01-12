@@ -8,9 +8,9 @@ namespace TrainStation.Domain.Enums
 {
     public enum TicketTypeNaming
     {
-        Full,
-        Animal,
-        Lgot,
-        Buggage
+        Full = 1,
+        Animal = 2,
+        Lgot = 3,
+        Buggage = 4
     }
 }

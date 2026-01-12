@@ -9,7 +9,9 @@ namespace TrainStation.Application.Models.Ticket
         Guid StartStationId,
         Guid EndStationId,
         Guid BuyerId,
-        TicketType TicketType 
+        TicketType TicketType,
+        decimal Price,
+        decimal PriceProcent
         ) : IModel<Guid>
     {
     }
