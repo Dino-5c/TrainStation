@@ -84,6 +84,7 @@ namespace TrainStation.Domain.Entities
         /// <returns>Возвращается true, если получилось изменить тарифную зону станции. В другом случае возвращается false</returns>
         public bool SetTariffZone(Tariffes tariffZone)
         {
+            if(tariffZone == null) return false;
             if (TariffZone == tariffZone) return false;
             TariffZone = tariffZone;
             return true;

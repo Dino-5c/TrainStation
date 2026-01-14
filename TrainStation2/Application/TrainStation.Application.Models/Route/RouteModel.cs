@@ -14,6 +14,6 @@ namespace TrainStation.Application.Models.Route
         public Guid Id { get; set; }
         public string RouteName { get; set; }
         public Guid AdministratorId { get; set; }
-        public IEnumerable<StationModel> Stations { get; init; }
+        public IEnumerable<StationModel> Stations { get; init; } /* init это///  Свойства, которые можно задавать только во время инициализации объекта (в конструкторе или через инициализатор объектов), а после этого они становятся неизменяемыми */
     }
 }

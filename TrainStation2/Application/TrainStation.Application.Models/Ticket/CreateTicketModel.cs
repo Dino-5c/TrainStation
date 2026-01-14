@@ -16,7 +16,7 @@ namespace TrainStation.Application.Models.Ticket
         DateTime BuyDate,
         Guid StartStationid,
         Guid EndStationId,
-        Guid Buyer,
+        Guid BuyerId,
         TicketType Tickettype
         ) : ICreateModel
     {

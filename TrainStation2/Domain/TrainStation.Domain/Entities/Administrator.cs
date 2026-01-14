@@ -1,4 +1,5 @@
 ﻿
+using System.Linq;
 using TrainStation.Domain.Entities.Base;
 using TrainStation.Domain.Enums;
 using TrainStation.Domain.Exceptions;
@@ -61,21 +62,28 @@ namespace TrainStation.Domain.Entities
 
         }
 
-        internal bool SetAdministratorLastName(LastName administratorLastName)
+        public bool SetAdministratorLastName(LastName administratorLastName)
         {
             if (AdministratorLastName == administratorLastName) return false;
             AdministratorLastName = administratorLastName;
             return true;
         }
 
-        internal bool SetAdministratorFirstName(FirstName administratorFirstName)
+        public bool SetAdministratorFirstName(FirstName administratorFirstName)
         {
             if (AdministratorFirstName == administratorFirstName) return false;
             AdministratorFirstName = administratorFirstName;
             return true;
         }
 
+        /* public Administrator? EditAdministrator(LastName newAdministratorLastName, FirstName newAdministratorFirstName)
+        {
+            if (newAdministratorLastName == null) throw new ArgumentNullValueException(nameof(newAdministratorLastName));
+            if (newAdministratorFirstName == null) throw new ArgumentNullValueException(nameof(newAdministratorFirstName));
 
+            var isEdit = SetAdministratorLastName(newAdministratorLastName) || SetAdministratorFirstName(newAdministratorFirstName);
+            return isEdit ? this : null;
+        } */
 
         public Route CreateRoute(RoName routeName)
         {
@@ -94,7 +102,7 @@ namespace TrainStation.Domain.Entities
         public bool SetRouteName(Route route, RoName routeName, Administrator administrator)
         {
             if (route == null) return false;
-            // if (!_routes.Contains(route)) return false; // Проверка, ести ли маршрут в списке маршрутов
+            if (!_routes.Contains(route)) return false; // Проверка, ести ли маршрут в списке маршрутов
             if (!route.SetRouteName(routeName)) return false;
             return true;
         }
@@ -116,7 +124,7 @@ namespace TrainStation.Domain.Entities
             route.DeleteStation(station);
             return true;
         }
-        public bool SetStationName(Station station, StationName stationName /*, this */)
+        /* public bool SetStationName(Station station, StationName stationName /*, this */ /*)
         {
             if (station == null) return false;
             // if (_stations.Contains(station)) return false;
@@ -146,6 +154,14 @@ namespace TrainStation.Domain.Entities
             // if (!_stations.Contains(station)) return false;
             if (!station.SetRoute(route)) return false;
             return true;
+        } */
+
+        public Station? RedactStation(Station station, StationName stationName, StationStatus stationStatus, Tariffes tariffZone, Route route)
+        {
+            if(station == null) return null;
+            // if(_routes.Any(r => r.Stations. Contains(stationName.Value))) return null;
+            var isEdit = station.SetStationName(stationName) || station.SetRoute(route) || station.ChangeStationStatus(stationStatus) || station.SetTariffZone(tariffZone);
+            return isEdit ? station : null;
         }
 
         public Tariffes CreateTariffZone(TarifZoneNames tariffZoneName, Money money, Distance distance)
@@ -189,20 +205,30 @@ namespace TrainStation.Domain.Entities
 
         public Tariffes? EditTariffZone(Tariffes tariffZone, TarifZoneNames tarifZoneName, Distance distance, Money price)
         {
-            if (!_tariffes.Contains(tariffZone)) return null; // Нужно делать проверки на исключения?
             if (tariffZone == null) return null;
+            if (!_tariffes.Contains(tariffZone)) return null; // Нужно делать проверки на исключения?
 
             var isEdit = tariffZone.SetTariffZoneName(tarifZoneName) || tariffZone.SetDistance(distance) || tariffZone.SetPrice(price);
             return isEdit ? tariffZone : null;
         }
 
-        public bool AddBuyer(Buyer buyer)
+        public Buyer AddBuyer(LastName buyerLastName, FirstName buyerFirstName)
         {
-            if (buyer == null) return false;
-            if (_buyers.Contains(buyer)) return false;
+
+            /* if (buyerLastName == null) return false; */
+            /* if (buyerFirstName == null) return false; */
+            var buyer = new Buyer(buyerLastName, buyerFirstName, this);
+            /* if (_buyers.Contains(buyer)) return false; */
             _buyers.Add(buyer);
-            return true;
+            return buyer;
         }
 
+        public bool DeleteBuyer(Buyer buyer)
+        {
+            if (buyer == null) return false;
+            if (!_buyers.Contains(buyer)) return false;
+            _buyers.Remove(buyer);
+            return true;
+        }
     }
 }

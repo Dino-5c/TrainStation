@@ -10,7 +10,7 @@ namespace TrainStation.Application.Models.Buyer
     public record class CreateBuyerModel(
         string LastName,
         string FirstName,
-        Guid AdminisratorId) : ICreateModel
+        Guid AdministratorId) : ICreateModel
     {
     }
 }

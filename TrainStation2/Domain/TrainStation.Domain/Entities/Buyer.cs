@@ -28,7 +28,7 @@ namespace TrainStation.Domain.Entities
             LastName = buyerLastName ?? throw new ArgumentNullValueException(nameof(buyerLastName));
             FirstName = buyerFirstName ?? throw new ArgumentNullValueException(nameof(buyerFirstName)); //  
             Administrator = administrator ?? throw new ArgumentNullException(nameof(administrator));
-            administrator.AddBuyer(this);
+            /* administrator.AddBuyer(this); */
         }
 
         protected Buyer()
@@ -40,14 +40,14 @@ namespace TrainStation.Domain.Entities
         {
 
         }
-        internal bool ChangeLastName(LastName newBuyerLastName)
+        public bool ChangeLastName(LastName newBuyerLastName)
         {
             if (LastName == newBuyerLastName) return false;
             LastName = newBuyerLastName;
             return true;
         }
 
-        internal bool ChangeFirstName(FirstName newBuyerFirstName)
+        public bool ChangeFirstName(FirstName newBuyerFirstName)
         {
             if (FirstName == newBuyerFirstName) return false;
             FirstName = newBuyerFirstName;
