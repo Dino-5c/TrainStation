@@ -31,7 +31,8 @@ namespace TrainStation.Application.Services.Mapping
                 .ForMember(dest => dest.Stations, opt => opt.MapFrom(src => src.Stations));
 
             CreateMap<Station, StationModel>()
-                .ForMember(dest => dest.StationName, opt => opt.MapFrom(src => src.StationName.Value));
+                .ForMember(dest => dest.StationName, opt => opt.MapFrom(src => src.StationName.Value))
+                .ForMember(dest => dest.StationStatus, opt => opt.MapFrom(src => src.StationStatus));
 
             CreateMap<Tariffes, TariffZoneModel>()
                 .ForMember(dest => dest.TarifZoneName, opt => opt.MapFrom(src => src.TariffName.Value))
@@ -40,7 +41,8 @@ namespace TrainStation.Application.Services.Mapping
 
             CreateMap<Ticket, TicketModel>()
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
-                .ForMember(dest => dest.PriceProcent, opt => opt.MapFrom(src => src.PriceProcent.Value));
+                .ForMember(dest => dest.PriceProcent, opt => opt.MapFrom(src => src.PriceProcent.Value))
+                .ForMember(dest => dest.TicketType, opt => opt.MapFrom(src => src.TicketType));
         }
 
     }

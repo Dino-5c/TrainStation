@@ -14,10 +14,10 @@ namespace TrainStation.Application.Models.Ticket
     public record class CreateTicketModel(
         
         DateTime BuyDate,
-        Guid StartStationid,
+        Guid StartStationId,
         Guid EndStationId,
         Guid BuyerId,
-        TicketType Tickettype
+        TicketType TicketType
         ) : ICreateModel
     {
     }

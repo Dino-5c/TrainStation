@@ -1,7 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TrainSation.WebHost.Helpers;
+using TrainSation.WebHost.Mapping;
+using TrainStation.Application.Models.Administrator;
+using TrainStation.Application.Services;
+using TrainStation.Application.Services.Abstractions.Base;
+using TrainStation.Application.Services.Mapping;
+using TrainStation.Domain.Entities;
 using TrainStation.Infrastructure.EntityFramework;
+using TrainStation.Infrastructure.EntityFramework.RepositoriesEF;
+using TrainStation.Repositories.Abstractions;
 
 namespace TrainSation.WebHost
 {
@@ -44,11 +52,16 @@ namespace TrainSation.WebHost
                     options.UseNpgsql(connectionString);
                 });
 
+            builder.Services.AddAutoMapper(typeof(PresentationProfile), typeof(ApplicationProfile));
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddScoped<IRepository<Administrator, Guid>, EFRepository<Administrator, Guid>>();
+
+            builder.Services.AddScoped<IApplicationService<AdministratorModel, CreateAdministratorModel, Guid>, AdministratorApplicationService>();
 
             var app = builder.Build();
 

@@ -50,7 +50,7 @@ namespace TrainStation.Domain.Entities
         /// </summary>
         /// <param name="routeName">Название маршрута.</param>
         /// <returns>Возвращается true, если получилось изменить название маршрута. В другом случае возвращается false</returns>
-        internal bool SetRouteName(RoName routeName/*, Administrator administrator*/)
+        public bool SetRouteName(RoName routeName/*, Administrator administrator*/)
         {
             if (routeName == null) return false;
             // throw new ArgumentNullValueException(nameof(route));

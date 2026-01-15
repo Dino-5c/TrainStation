@@ -12,44 +12,67 @@ namespace TrainStation.Application.Services
         IRepository<Administrator, Guid> administratorRepository /*IAdministratorRepository*/, IMapper mapper)
         : IApplicationService<TariffZoneModel, CreateTariffZoneModel, Guid>
     {
-        // Получение модели по id
+        /// <summary>
+        /// Получение модели по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<TariffZoneModel?> GetModelByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var tariffZone = await tariffZoneRepository.GetByIdAsync(id, cancellationToken);
             return tariffZone is null? null : mapper.Map<TariffZoneModel>(tariffZone);
         }
-        // Получение всех моделей
+        
+        /// <summary>
+        /// Получение всех моделей
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<TariffZoneModel>>GetModelsAsync(CancellationToken cancellationToken = default)
          => (await tariffZoneRepository.GetAllAsync(cancellationToken, true))
             .Select(mapper.Map<TariffZoneModel>);
 
-        // Создание тарифной зоны
-        public async Task<TariffZoneModel?> CreateModelAsync(CreateTariffZoneModel crtTariffZoneModel, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Создание тарифной зоны
+        /// </summary>
+        /// <param name="crtTariffZoneModel"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<TariffZoneModel?> CreateModelAsync(CreateTariffZoneModel tariffZoneInformation, CancellationToken cancellationToken = default)
         {
             // Администратор, создающий модель
-            var administrator = await administratorRepository.GetByIdAsync(crtTariffZoneModel.AdministratorId, cancellationToken);
+            var administrator = await administratorRepository.GetByIdAsync(tariffZoneInformation.AdministratorId, cancellationToken);
             if (administrator is null)
                 return null;
 
             // Создание здесь тарифной зоны
             var tariffZone = administrator.CreateTariffZone(
-                new(crtTariffZoneModel.TarifZoneName), // можно просто написать в коде new(..) без точного типа
-                new(crtTariffZoneModel.Price),
-                new(crtTariffZoneModel.Distance));
+                new(tariffZoneInformation.TarifZoneName), // можно просто написать в коде new(..) без точного типа
+                new(tariffZoneInformation.Price),
+                new(tariffZoneInformation.Distance));
 
             if (tariffZone is null)
                 return null;
+
+
+            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
             // Добавление тарифной зоны
             var createdTariffZone = await tariffZoneRepository.AddAsync(tariffZone, cancellationToken);
             return createdTariffZone is null ? null : mapper.Map<TariffZoneModel>(createdTariffZone);
         }
 
-        // Обновление значений в объекте Тарифной зоны
-        public async Task<bool> UpdateModelAsync(TariffZoneModel tariffZoneModel, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Обновление значений в объекте Тарифной зоны
+        /// </summary>
+        /// <param name="tariffZoneModel"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateModelAsync(TariffZoneModel tariffZoneInformation, CancellationToken cancellationToken = default)
         {
-            var administratorTask = administratorRepository.GetByIdAsync(tariffZoneModel.AdministratorId, cancellationToken);
-            var tariffZoneTask = tariffZoneRepository.GetByIdAsync(tariffZoneModel.Id, cancellationToken);
+            var administratorTask = administratorRepository.GetByIdAsync(tariffZoneInformation.AdministratorId, cancellationToken);
+            var tariffZoneTask = tariffZoneRepository.GetByIdAsync(tariffZoneInformation.Id, cancellationToken);
 
             Task.WaitAll(administratorTask, tariffZoneTask);
             if (administratorTask.Result is null || tariffZoneTask.Result is not null) // tariffZoneTask. Result не null?
@@ -57,24 +80,39 @@ namespace TrainStation.Application.Services
 
             var administrator = administratorTask.Result;
             var tariffZone = tariffZoneTask.Result;
-            var edirtionTariffZone = administrator.EditTariffZone(
+            var editionTariffZone = administrator.EditTariffZone(
                 tariffZone!, // tariffZone! значит - элемент существует
-                new(tariffZoneModel.TarifZoneName),
-                new(tariffZoneModel.Distance),
-                new(tariffZoneModel.Price));
+                new(tariffZoneInformation.TarifZoneName),
+                new(tariffZoneInformation.Distance),
+                new(tariffZoneInformation.Price));
 
-            if (edirtionTariffZone is null)
+            if (editionTariffZone is null)
                 return false;
 
-            return await tariffZoneRepository.UpdateAsync(edirtionTariffZone, cancellationToken);
+            return await tariffZoneRepository.UpdateAsync(editionTariffZone, cancellationToken);
         }
 
-        // Удаление модели
+        /// <summary>
+        /// Удаление модели
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteModelAsync(Guid id, CancellationToken cancellationToken = default)
         {
             // Вызвать метод удаления с Администратора?
             var /*administrator*/  tariffZone = await tariffZoneRepository.GetByIdAsync(id, cancellationToken);
-            return tariffZone is null ? false : await tariffZoneRepository.DeleteAsync(tariffZone, cancellationToken);
+            if (tariffZone is null)
+                return false;
+            // Администратор, создающий модель
+            var administrator = await administratorRepository.GetByIdAsync(tariffZone.Administrator.Id, cancellationToken);
+            if (administrator is null)
+                return false;
+
+            var isTariffZoneClear = administrator.DeleteTariffZone(tariffZone);
+            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+
+            return isTariffZoneClear ? await tariffZoneRepository.DeleteAsync(tariffZone, cancellationToken) : false;
         }
     }
 }

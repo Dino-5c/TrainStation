@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TrainStation.Application.Models.Buyer;
 using TrainStation.Application.Services.Abstractions;
 using TrainStation.Domain.Entities;
+using TrainStation.Application.Services.Abstractions.Base;
 using TrainStation.Repositories.Abstractions;
 
 namespace TrainStation.Application.Services
@@ -14,7 +15,7 @@ namespace TrainStation.Application.Services
     public class BuyerApplicationService(
         IRepository<Buyer, Guid> buyerRepository,
         IRepository<Administrator, Guid> administratorRepository,
-        IMapper mapper) : IBuyerApplicationService
+        IMapper mapper) : IApplicationService<BuyerModel, CreateBuyerModel, Guid>
     {
         /// <summary>
         /// Получение по id
@@ -55,6 +56,8 @@ namespace TrainStation.Application.Services
 
             if (buyer is null)
                 return null;
+
+            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
             var createdBuyer = await buyerRepository.AddAsync(buyer, cancellationToken);
             return createdBuyer is null ? null : mapper.Map<BuyerModel>(createdBuyer);
@@ -97,8 +100,11 @@ namespace TrainStation.Application.Services
             var administrator = await administratorRepository.GetByIdAsync(buyer.Administrator.Id, cancellationToken);
             if (administrator is null)
                 return false;
-            administrator.DeleteBuyer(buyer);
-            return administrator is null ? false : await administratorRepository.DeleteAsync(administrator, cancellationToken);
+            var isBuyerClear = administrator.DeleteBuyer(buyer);
+
+            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+
+            return isBuyerClear ? await buyerRepository.DeleteAsync(buyer, cancellationToken) : false ;
         }
     }
 }

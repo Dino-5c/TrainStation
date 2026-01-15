@@ -8,11 +8,12 @@ using TrainStation.Application.Models.Administrator;
 using TrainStation.Application.Services.Abstractions;
 using TrainStation.Domain.Entities;
 using TrainStation.Repositories.Abstractions;
+using TrainStation.Application.Services.Abstractions.Base;
 
 namespace TrainStation.Application.Services
 {
     public class AdministratorApplicationService(
-        IRepository<Administrator, Guid> administratorRepository, IMapper mapper) : IAdministratorApplicationService
+        IRepository<Administrator, Guid> administratorRepository, IMapper mapper) : IApplicationService<AdministratorModel, CreateAdministratorModel, Guid>
     {
         /// <summary>
         /// Получение всех администраторов
@@ -44,7 +45,7 @@ namespace TrainStation.Application.Services
         public async Task<AdministratorModel?> CreateModelAsync(CreateAdministratorModel administratorInformation, CancellationToken cancellationToken = default)
         {
             // if (await administratorRepository.GetByIdAsync(administratorInformation)) // Проверка на существовал ли администратор с Guid. Администратор создаётся в доменном слое, в модели нет Guid, проверку делать не по такому принципу или не выполнять  
-            Administrator administrator = new(new(administratorInformation.AdministratorFirstName), new(administratorInformation.AdministratorFirstName));
+            Administrator administrator = new(new(administratorInformation.AdministratorLastName), new(administratorInformation.AdministratorFirstName));
             var createdAdministrator = await administratorRepository.AddAsync(administrator, cancellationToken);
             return createdAdministrator is null ? null : mapper.Map<AdministratorModel>(administrator);
         }

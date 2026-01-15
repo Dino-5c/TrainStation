@@ -99,17 +99,17 @@ namespace TrainStation.Domain.Entities
             _routes.Remove(route);
             return true;
         }
-        public bool SetRouteName(Route route, RoName routeName, Administrator administrator)
+        public Route? SetRouteName(Route route, RoName routeName)
         {
-            if (route == null) return false;
-            if (!_routes.Contains(route)) return false; // Проверка, ести ли маршрут в списке маршрутов
-            if (!route.SetRouteName(routeName)) return false;
-            return true;
+            if (route == null) return null; // Нужно передавать администратора?
+            if (!_routes.Contains(route)) return null; // Проверка, ести ли маршрут в списке маршрутов
+            if (!route.SetRouteName(routeName)) return null;
+            return route;
         }
 
-        public Station CreateStation(StationName stationName, Route route, Tariffes tariffZone, StationStatus stationStatus)
+        public Station CreateStation(StationName stationName, Route route, Tariffes tariffZone)
         {
-            Station station = new(stationName, route, tariffZone, stationStatus);
+            Station station = new(stationName, route, tariffZone);
             //_stations.Add(station);
             route.AddStation(station); // Нужно добавить этот метод и сделать метод в классе Route публичным. Нужно сделать public в классе Route список станций.
             // Ticket ticket.TariffZones

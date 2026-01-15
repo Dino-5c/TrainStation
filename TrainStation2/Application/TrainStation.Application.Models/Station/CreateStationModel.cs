@@ -10,8 +10,7 @@ namespace TrainStation.Application.Models.Station
     public record class CreateStationModel(
         string StationName,
         Guid RouteId,
-        Guid TariffZoneId,
-        StationStatus StationStatus) : ICreateModel
+        Guid TariffZoneId) : ICreateModel
     {
     }
 }
