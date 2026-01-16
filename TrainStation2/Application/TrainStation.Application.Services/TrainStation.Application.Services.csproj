@@ -8,12 +8,23 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\TrainStation.Domain\TrainStation.Domain.csproj" />
     <ProjectReference Include="..\..\Domain\TrainStation.Repositories.Abstractions\TrainStation.Repositories.Abstractions.csproj" />
     <ProjectReference Include="..\..\Domain\TrainStation.ValueObjects\TrainStation.ValueObjects.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TrainStation.Infrastructure.EntityFramework\TrainStation.Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\TrainStation.Application.Models\TrainStation.Application.Models.csproj" />
   </ItemGroup>
 

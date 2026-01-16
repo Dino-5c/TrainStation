@@ -80,5 +80,9 @@ namespace TrainStation.Domain.Entities
             return true;
         }
 
+        internal void ClearStations()
+        {
+            _stations.Clear();
+        }
     }
 }

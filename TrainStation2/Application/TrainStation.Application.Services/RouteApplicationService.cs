@@ -8,6 +8,8 @@ using TrainStation.Application.Models.Route;
 using TrainStation.Domain.Entities;
 using TrainStation.Application.Services.Abstractions.Base;
 using TrainStation.Repositories.Abstractions;
+using TrainStation.Infrastructure.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 
 namespace TrainStation.Application.Services
 {
@@ -16,6 +18,8 @@ namespace TrainStation.Application.Services
         IRepository<Administrator, Guid> administratorRepository,
         IMapper mapper) : IApplicationService<RouteModel, CreateRouteModel, Guid>
     {
+        private readonly ApplicationDbContext Dbcontext;
+
         /// <summary>
         /// Получение всех моделей
         /// </summary>
@@ -95,6 +99,10 @@ namespace TrainStation.Application.Services
                 return false;
 
             var isRouteClear = administrator.DeleteRoute(route);
+
+            var stations = await Dbcontext.Set<Station>().Where(s => s.Route.Id == route.Id).ToListAsync(cancellationToken); // Удаление всех станций маршрута из базы данных
+            Dbcontext.Set<Station>().RemoveRange(stations);
+            await Dbcontext.SaveChangesAsync(cancellationToken);
 
             var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 

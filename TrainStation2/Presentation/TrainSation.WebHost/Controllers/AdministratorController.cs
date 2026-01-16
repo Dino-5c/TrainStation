@@ -13,7 +13,7 @@ using TrainStation.Application.Services.Abstractions.Base;
 namespace TrainSation.WebHost.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/Administrator/[controller]")]
     public class AdministratorController(IApplicationService<AdministratorModel, CreateAdministratorModel, Guid> administratorApplicationService, IMapper mapper) : ControllerBase
     {
         [HttpGet]
@@ -37,7 +37,7 @@ namespace TrainSation.WebHost.Controllers
             return Ok(mapper.Map<AdministratorDetailedResponce>(administrator));
         }
 
-        [HttpPost]
+        [HttpPost] // Запись в Базу Данных 
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AdministratorShortResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateAdministrator(CreateAdministratorRequest request, CancellationToken cancellationToken)
@@ -50,17 +50,41 @@ namespace TrainSation.WebHost.Controllers
             return CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, administratorResponce);
         }
 
-        /* [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AdministratorDetailedResponce))]
+        [HttpPatch]// Редактирование
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorDetailedResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        public async Task<IActionResult> UpdateAdministrator(CreateAdministratorRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        public async Task<IActionResult> UpdateAdministrator(UpdateAdministratorRequest request, CancellationToken cancellationToken)
         {
-            var administrator = mapper.Map<AdministratorModel>(request);
+            var administrator = await administratorApplicationService.GetModelByIdAsync(request.Id, cancellationToken);
+            if (administrator is null)
+                return NotFound($"Administrator with id:{request.Id} not found");
+
+            
             var isAdministratorUpdated = await administratorApplicationService.UpdateModelAsync(administrator, cancellationToken);
             if (isAdministratorUpdated == false)
                 return BadRequest($"Administrator can not be redact");
-            var administratorResponce = mapper.Map<AdministratorDetailedResponce>(createdAdministrator);
-            return CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, administratorResponce);
-        } */
+            var administratorResponce = mapper.Map<AdministratorDetailedResponce>(administrator);
+            return Ok(administratorResponce) /* CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, ) */;
+        }
+
+        [HttpDelete] // Удалить экземпляр администратора
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorDetailedResponce))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        public async Task<IActionResult> DeleteAdministrator(Guid id, CancellationToken cancellationToken)
+        {
+            var administrator = await administratorApplicationService.GetModelByIdAsync(id, cancellationToken);
+            if (administrator is null)
+                return NotFound($"Administrator with id:{id} not found");
+
+            var isAdministratorDel = await administratorApplicationService.DeleteModelAsync(id, cancellationToken);
+            if (isAdministratorDel == false)
+                return BadRequest($"Administrator can not be delete");
+            return Ok(mapper.Map<AdministratorDetailedResponce>(administrator));
+        }
+
+        // [HttpPost]
+         // public async Task<IActionResult> 
     }
 }

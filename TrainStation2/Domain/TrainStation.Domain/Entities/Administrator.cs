@@ -96,6 +96,7 @@ namespace TrainStation.Domain.Entities
         {
             if (route == null) return false; // Если null, возвращается false
             // if (!_routes.Contains(route)) return false; // Если в списке нет такого маршрута, возвращается false
+            route.ClearStations();
             _routes.Remove(route);
             return true;
         }

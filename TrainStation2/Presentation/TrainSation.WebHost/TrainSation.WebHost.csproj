@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\TrainStation.Application.Models\TrainStation.Application.Models.csproj" />
+    <ProjectReference Include="..\..\Application\TrainStation.Application.Services\TrainStation.Application.Services.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TrainStation.Infrastructure.EntityFramework\TrainStation.Infrastructure.EntityFramework.csproj" />
   </ItemGroup>
 
