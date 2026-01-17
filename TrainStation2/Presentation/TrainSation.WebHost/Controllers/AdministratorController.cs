@@ -60,12 +60,15 @@ namespace TrainSation.WebHost.Controllers
             if (administrator is null)
                 return NotFound($"Administrator with id:{request.Id} not found");
 
+            var newAdministrator = mapper.Map<AdministratorModel>(request);
             
-            var isAdministratorUpdated = await administratorApplicationService.UpdateModelAsync(administrator, cancellationToken);
+            var isAdministratorUpdated = await administratorApplicationService.UpdateModelAsync(newAdministrator, cancellationToken);
             if (isAdministratorUpdated == false)
                 return BadRequest($"Administrator can not be redact");
-            var administratorResponce = mapper.Map<AdministratorDetailedResponce>(administrator);
-            return Ok(administratorResponce) /* CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, ) */;
+            // var administratorResponce = mapper.Map<AdministratorDetailedResponce>(administrator);
+            // return Ok(administratorResponce) /* CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, ) */;
+            var updated = await administratorApplicationService.GetModelByIdAsync(request.Id, cancellationToken);
+            return Ok(mapper.Map<AdministratorDetailedResponce>(updated));
         }
 
         [HttpDelete] // Удалить экземпляр администратора

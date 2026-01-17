@@ -58,19 +58,36 @@ namespace TrainStation.Application.Services
         /// <returns></returns>
         public async Task<bool> UpdateModelAsync(AdministratorModel administratorInformation, CancellationToken cancellationToken = default)
         {
-            var administratorById = administratorRepository.GetByIdAsync(administratorInformation.Id, cancellationToken);
-            if (administratorById.Result is null)
+            var administrator = await administratorRepository.GetByIdAsync(administratorInformation.Id, cancellationToken);
+            if (administrator is null)
                 return false;
 
-            var administrator = administratorById.Result;
+            var changed = false;
 
-            var okLastName = administrator.SetAdministratorLastName(new(administratorInformation.AdministratorLastName));
-            var okFirstName = administrator.SetAdministratorFirstName(new(administratorInformation.AdministratorFirstName));
+            // Фамилия: меняем только если другая
+            if (administrator.AdministratorLastName.Value != administratorInformation.AdministratorLastName)
+            {
+                var okLastName = administrator.SetAdministratorLastName(new(administratorInformation.AdministratorLastName));
+                if (!okLastName)
+                    return false;
 
-            if (!okLastName || !okFirstName)
-                return false;
+                changed = true;
+            }
 
-            administrator = mapper.Map<Administrator>(administratorInformation);
+            // Имя: меняем только если другое
+            if (administrator.AdministratorFirstName.Value != administratorInformation.AdministratorFirstName)
+            {
+                var okFirstName = administrator.SetAdministratorFirstName(new(administratorInformation.AdministratorFirstName));
+                if (!okFirstName)
+                    return false;
+
+                changed = true;
+            }
+
+            // Если вообще ничего не изменили — можно вернуть false (или true)
+            if (!changed)
+                return true;
+
             return await administratorRepository.UpdateAsync(administrator, cancellationToken);
         }
 

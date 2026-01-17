@@ -8,17 +8,19 @@ namespace TrainSation.WebHost.Validators.TariffZone
     {
         public CreateTariffZoneValidator()
         {
-            RuleFor(tariffZone => tariffZone.administratorId)
-                .SetValidator(new GuidPresentationValidator());
+            RuleFor(tariffZone => tariffZone.TariffZoneName)
+                .SetValidator(new TariffZoneNamePresentationValidator());
 
-            RuleFor(tariffZone => tariffZone.price)
-                .SetValidator(new MoneyAmountPresentationValidator());
-
-            RuleFor(tariffZone => tariffZone.distance)
+            RuleFor(tariffZone => tariffZone.Distance)
                 .SetValidator(new DistancePresentationValidator());
 
-            RuleFor(tariffZone => tariffZone.tariffZoneName)
-                .SetValidator(new TariffZoneNamePresentationValidator());
+            RuleFor(tariffZone => tariffZone.Price)
+                .SetValidator(new MoneyAmountPresentationValidator());
+
+            RuleFor(tariffZone => tariffZone.AdministratorId)
+                .SetValidator(new GuidPresentationValidator());
+
+
         }
     }
 }

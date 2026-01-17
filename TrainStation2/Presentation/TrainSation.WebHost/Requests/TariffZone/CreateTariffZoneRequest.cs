@@ -1,6 +1,6 @@
 ﻿namespace TrainSation.WebHost.Requests.TariffZone
 {
-    public record class CreateTariffZoneRequest(int tariffZoneName, int distance, decimal price, Guid administratorId)
+    public record class CreateTariffZoneRequest(int TariffZoneName, int Distance, decimal Price, Guid AdministratorId)
     {
     }
 }

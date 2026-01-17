@@ -3,6 +3,11 @@ using Microsoft.OpenApi.Models;
 using TrainSation.WebHost.Helpers;
 using TrainSation.WebHost.Mapping;
 using TrainStation.Application.Models.Administrator;
+using TrainStation.Application.Models.Buyer;
+using TrainStation.Application.Models.Route;
+using TrainStation.Application.Models.Station;
+using TrainStation.Application.Models.TariffZone;
+using TrainStation.Application.Models.Ticket;
 using TrainStation.Application.Services;
 using TrainStation.Application.Services.Abstractions.Base;
 using TrainStation.Application.Services.Mapping;
@@ -60,8 +65,18 @@ namespace TrainSation.WebHost
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<IRepository<Administrator, Guid>, EFRepository<Administrator, Guid>>();
+            builder.Services.AddScoped<IRepository<Buyer, Guid>, EFRepository<Buyer, Guid>>();
+            builder.Services.AddScoped<IRepository<TrainStation.Domain.Entities.Route, Guid>, EFRepository< TrainStation.Domain.Entities.Route, Guid>>();
+            builder.Services.AddScoped<IRepository<Station, Guid>, EFRepository<Station, Guid>>();
+            builder.Services.AddScoped<IRepository<Tariffes, Guid>, EFRepository<Tariffes, Guid>>();
+            builder.Services.AddScoped<IRepository<Ticket, Guid>, EFRepository<Ticket, Guid>>();
 
             builder.Services.AddScoped<IApplicationService<AdministratorModel, CreateAdministratorModel, Guid>, AdministratorApplicationService>();
+            builder.Services.AddScoped<IApplicationService<BuyerModel, CreateBuyerModel, Guid>, BuyerApplicationService>();
+            builder.Services.AddScoped<IApplicationService<RouteModel, CreateRouteModel, Guid>, RouteApplicationService>();
+            builder.Services.AddScoped<IApplicationService<StationModel, CreateStationModel, Guid>, StationApplicationService>();
+            builder.Services.AddScoped<IApplicationService<TariffZoneModel, CreateTariffZoneModel, Guid>, TariffZoneApplicationService>();
+            builder.Services.AddScoped<IApplicationService<TicketModel, CreateTicketModel, Guid>, TicketApplicationService>();
 
             var app = builder.Build();
 
