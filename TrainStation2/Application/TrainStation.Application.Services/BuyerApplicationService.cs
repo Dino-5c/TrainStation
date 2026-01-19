@@ -51,13 +51,13 @@ namespace TrainStation.Application.Services
             if (administrator is null)
                 return null;
             var buyer = administrator.AddBuyer(
-                new(buyerInformation.FirstName),
-                new(buyerInformation.LastName));
+                new(buyerInformation.BuyerFirstName),
+                new(buyerInformation.BuyerLastName));
 
             if (buyer is null)
                 return null;
 
-            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+            // var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
             var createdBuyer = await buyerRepository.AddAsync(buyer, cancellationToken);
             return createdBuyer is null ? null : mapper.Map<BuyerModel>(createdBuyer);
@@ -75,12 +75,32 @@ namespace TrainStation.Application.Services
             if (buyer is null)
                 return false;
 
-            var okLastName = buyer.ChangeLastName(new(buyerInformation.LastName));
-            var okFirstName = buyer.ChangeFirstName(new(buyerInformation.FirstName));
+            var changed = false;
 
-            if (!okLastName || !okFirstName)
-                return false;
-            buyer = mapper.Map<Buyer>(buyerInformation);
+            // Фамилия: меняем только если другая
+            if (buyer.LastName.Value != buyerInformation.BuyerLastName)
+            {
+                var okLastName = buyer.ChangeLastName(new(buyerInformation.BuyerLastName));
+                if (!okLastName)
+                    return false;
+
+                changed = true;
+            }
+
+            // Имя: меняем только если другое
+            if (buyer.FirstName.Value != buyerInformation.BuyerFirstName)
+            {
+                var okFirstName = buyer.ChangeFirstName(new(buyerInformation.BuyerFirstName));
+                if (!okFirstName)
+                    return false;
+
+                changed = true;
+            }
+
+            // Если вообще ничего не изменили — можно вернуть false (или true)
+            if (!changed)
+                return true;
+
             return await buyerRepository.UpdateAsync(buyer, cancellationToken);
 
         }
@@ -100,11 +120,11 @@ namespace TrainStation.Application.Services
             var administrator = await administratorRepository.GetByIdAsync(buyer.Administrator.Id, cancellationToken);
             if (administrator is null)
                 return false;
-            var isBuyerClear = administrator.DeleteBuyer(buyer);
+            // var isBuyerClear = administrator.DeleteBuyer(buyer);
 
             var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
-            return isBuyerClear ? await buyerRepository.DeleteAsync(buyer, cancellationToken) : false ;
+            return await buyerRepository.DeleteAsync(buyer, cancellationToken);
         }
     }
 }

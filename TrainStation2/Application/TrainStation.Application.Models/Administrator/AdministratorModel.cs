@@ -15,8 +15,8 @@ namespace TrainStation.Application.Models.Administrator
         public Guid Id { get; set; }
         public string AdministratorLastName { get; set; }
         public string AdministratorFirstName { get; set; }
-        public IEnumerable<RouteModel> Routes { get; init; }
-        public IEnumerable<TariffZoneModel> TariffZones { get; init; }
-        public IEnumerable<BuyerModel> Buyers { get; init; }
+        public IEnumerable<RouteModel> Routes { get; set; }
+        public IEnumerable<TariffZoneModel> TariffZones { get; set; }
+        public IEnumerable<BuyerModel> Buyers { get; set; }
     }
 }

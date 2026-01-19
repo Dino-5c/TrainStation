@@ -17,7 +17,7 @@ namespace TrainStation.Infrastructure.EntityFramework.Configurations
                 .IsRequired()
                 .HasConversion(stationName => stationName.Value, str => new StationName(str))
                 .HasMaxLength(StationNameValidator.MAX_LENGTH);
-            builder.HasOne(x => x.Route).WithMany("_stations");
+            builder.HasOne(x => x.Route).WithMany("_stations").HasForeignKey(s => s.RouteId);
             builder.HasOne(x => x.TariffZone)
                 .WithMany() // У Tariffes нет коллекции станций
                 .HasForeignKey("TariffZoneId")

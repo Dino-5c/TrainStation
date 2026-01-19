@@ -27,7 +27,7 @@ namespace TrainSation.WebHost.Mapping
             CreateMap<TariffZoneModel, TariffZoneShortResponce>();
             CreateMap<TariffZoneModel, TariffZoneDetailedResponce>();
             CreateMap<CreateTariffZoneRequest, CreateTariffZoneModel>();
-            CreateMap<CreateTariffZoneModel, TariffZoneDetailedResponce>();
+            CreateMap<CreateTariffZoneModel, TariffZoneShortResponce>();
             CreateMap<UpdateTariffZoneRequest, TariffZoneModel>();
 
             CreateMap<RouteModel, RouteShortResponce>();

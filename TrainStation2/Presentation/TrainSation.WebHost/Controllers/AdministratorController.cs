@@ -37,7 +37,7 @@ namespace TrainSation.WebHost.Controllers
             return Ok(mapper.Map<AdministratorDetailedResponce>(administrator));
         }
 
-        [HttpPost] // Запись в Базу Данных 
+        [HttpPost("Create")] // Запись в Базу Данных 
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AdministratorShortResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateAdministrator(CreateAdministratorRequest request, CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ namespace TrainSation.WebHost.Controllers
             return CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, administratorResponce);
         }
 
-        [HttpPatch]// Редактирование
+        [HttpPatch("Redacting")]// Редактирование
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorDetailedResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -71,7 +71,7 @@ namespace TrainSation.WebHost.Controllers
             return Ok(mapper.Map<AdministratorDetailedResponce>(updated));
         }
 
-        [HttpDelete] // Удалить экземпляр администратора
+        [HttpDelete("Delete")] // Удалить экземпляр администратора
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AdministratorDetailedResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]

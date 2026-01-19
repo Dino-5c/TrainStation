@@ -71,7 +71,7 @@ namespace TrainStation.Application.Services
 
 
             // route = mapper.Map<RouteModel>(route);
-            var updatedRoute = await routeRepository.UpdateAsync(route, cancellationToken); // Нужно обновление маршрута, если станция добавлена в коллекцию маршрута?
+            // var updatedRoute = await routeRepository.UpdateAsync(route, cancellationToken); // Нужно обновление маршрута, если станция добавлена в коллекцию маршрута?
 
             var createdStation = await stationRepository.AddAsync(station, cancellationToken);
             return createdStation is null ? null : mapper.Map<StationModel>(createdStation);
@@ -149,11 +149,11 @@ namespace TrainStation.Application.Services
 
             var administrator = administratorById.Result;
 
-            var isStationClear = administrator.DeleteStation(station, route);
-            var updatedRoute = await routeRepository.UpdateAsync(route, cancellationToken); // Нужно обновление маршрута, если станция добавлена в коллекцию маршрута?
+            // var isStationClear = administrator.DeleteStation(station, route);
+            // var updatedRoute = await routeRepository.UpdateAsync(route, cancellationToken); // Нужно обновление маршрута, если станция добавлена в коллекцию маршрута?
 
             // Если получилось удалить станцию из списка, удаляем из Базы Данных её тоже
-            return isStationClear ? await stationRepository.DeleteAsync(station, cancellationToken) : false;
+            return /* isStationClear ? */ await stationRepository.DeleteAsync(station, cancellationToken) /* : false */;
 
 
 

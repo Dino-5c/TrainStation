@@ -12,7 +12,7 @@ namespace TrainSation.WebHost.Validators.TariffZone
             RuleFor(tariffZone => tariffZone.Id)
                 .SetValidator(new GuidPresentationValidator());
 
-             RuleFor(tariffZone => tariffZone.TariffZoneName)
+             RuleFor(tariffZone => tariffZone.TarifZoneName)
                 .SetValidator(new TariffZoneNamePresentationValidator());          
             
             RuleFor(tariffZone => tariffZone.Price)

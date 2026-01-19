@@ -47,7 +47,7 @@ namespace TrainSation.WebHost
                     {
                         Version = "v1",
                         Title = "Train station API",
-                        Description = "The Train station API provides endpoints for auction management. This API allows you to put lots up for bidding and participate in an auction."
+                        Description = "The Train station API provides endpoints for auction management. This API allows you to buy tickets by buyer or(and) add objects by administrator to train program."
                     });
                 });
 

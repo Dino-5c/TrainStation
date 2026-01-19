@@ -55,8 +55,7 @@ namespace TrainStation.Application.Services
             if (tariffZone is null)
                 return null;
 
-
-            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+            // var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
             // Добавление тарифной зоны
             var createdTariffZone = await tariffZoneRepository.AddAsync(tariffZone, cancellationToken);
@@ -75,7 +74,7 @@ namespace TrainStation.Application.Services
             var tariffZoneTask = tariffZoneRepository.GetByIdAsync(tariffZoneInformation.Id, cancellationToken);
 
             Task.WaitAll(administratorTask, tariffZoneTask);
-            if (administratorTask.Result is null || tariffZoneTask.Result is not null) // tariffZoneTask. Result не null?
+            if (administratorTask.Result is null || tariffZoneTask.Result is null) // tariffZoneTask. Result не null?
                 return false;
 
             var administrator = administratorTask.Result;
@@ -102,17 +101,17 @@ namespace TrainStation.Application.Services
         {
             // Вызвать метод удаления с Администратора?
             var /*administrator*/  tariffZone = await tariffZoneRepository.GetByIdAsync(id, cancellationToken);
-            if (tariffZone is null)
-                return false;
+            // if (tariffZone is null)
+            //     return false;
             // Администратор, создающий модель
-            var administrator = await administratorRepository.GetByIdAsync(tariffZone.Administrator.Id, cancellationToken);
-            if (administrator is null)
-                return false;
+            // var administrator = await administratorRepository.GetByIdAsync(tariffZone.Administrator.Id, cancellationToken);
+            // if (administrator is null)
+            //     return false;
 
-            var isTariffZoneClear = administrator.DeleteTariffZone(tariffZone);
-            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+            /* var isTariffZoneClear = administrator.DeleteTariffZone(tariffZone); */
+            // var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
-            return isTariffZoneClear ? await tariffZoneRepository.DeleteAsync(tariffZone, cancellationToken) : false;
+            return  tariffZone is null ? false : await tariffZoneRepository.DeleteAsync(tariffZone, cancellationToken);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace TrainStation.Domain.Entities
         public StationStatus StationStatus { get; private set; }
 
         public Guid TariffZoneId { get; private set; }
+        
+        public Guid RouteId { get; private set; }
 
         public bool IsActive => StationStatus == StationStatus.Active;
 
@@ -30,6 +32,7 @@ namespace TrainStation.Domain.Entities
             TariffZone = tariffZone ?? throw new ArgumentNullValueException(nameof(tariffZone));
             TariffZoneId = tariffZone.Id;
             StationStatus = StationStatus.Active; /* ?? throw new ArgumentNullValueException(nameof(stationStatus)) */;
+            RouteId = route.Id;
 
         }
         public Station(StationName stationName, Route route, Tariffes tariffZone)

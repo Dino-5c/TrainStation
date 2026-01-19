@@ -57,7 +57,7 @@ namespace TrainStation.Application.Services
             if (route is null)
                 return null;
 
-            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+            // var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
             var createdRoute = await routeRepository.AddAsync(route, cancellationToken);
             return createdRoute is null ? null : mapper.Map<RouteModel>(createdRoute);
@@ -98,15 +98,20 @@ namespace TrainStation.Application.Services
             if (administrator == null)
                 return false;
 
-            var isRouteClear = administrator.DeleteRoute(route);
+            // var isRouteClear = administrator.DeleteRoute(route);
+            if(route.Stations != null)
+            {
+                var stations = await Dbcontext.Set<Station>().Where(s => s.Route.Id == route.Id).ToListAsync(cancellationToken); // Удаление всех станций маршрута из базы данных
+                if (stations == null)
+                    return false;
+                Dbcontext.Set<Station>().RemoveRange(stations);
+                await Dbcontext.SaveChangesAsync(cancellationToken);                
+            }
 
-            var stations = await Dbcontext.Set<Station>().Where(s => s.Route.Id == route.Id).ToListAsync(cancellationToken); // Удаление всех станций маршрута из базы данных
-            Dbcontext.Set<Station>().RemoveRange(stations);
-            await Dbcontext.SaveChangesAsync(cancellationToken);
 
-            var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
+            // var updatedAdministrator = await administratorRepository.UpdateAsync(administrator, cancellationToken); // Обновление администратора
 
-            return isRouteClear ? await routeRepository.DeleteAsync(route, cancellationToken) : false;
+            return /* isRouteClear ? */ await routeRepository.DeleteAsync(route, cancellationToken) /* : false */;
         }
     }
 }

@@ -61,7 +61,7 @@ namespace TrainStation.Application.Services
             if (ticket is null)
                 return null;
 
-            var updatedBuyer = await buyerRepository.UpdateAsync(buyer, cancellationToken); // Обновление покупателя
+            // var updatedBuyer = await buyerRepository.UpdateAsync(buyer, cancellationToken); // Обновление покупателя
 
             var createdTicket = await ticketRepository.AddAsync(ticket, cancellationToken);
             return createdTicket is null ? null : mapper.Map<TicketModel>(createdTicket);

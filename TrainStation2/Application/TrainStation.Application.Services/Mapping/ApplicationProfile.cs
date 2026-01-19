@@ -6,6 +6,7 @@ using TrainStation.Application.Models.Station;
 using TrainStation.Application.Models.TariffZone;
 using TrainStation.Application.Models.Ticket;
 using TrainStation.Domain.Entities;
+using TrainStation.ValueObjects;
 
 namespace TrainStation.Application.Services.Mapping
 {
@@ -13,6 +14,7 @@ namespace TrainStation.Application.Services.Mapping
     {
         public ApplicationProfile()
         {
+
 
             CreateMap<Administrator, AdministratorModel>()
                 .ForMember(dest => dest.AdministratorLastName, opt => opt.MapFrom(src => src.AdministratorLastName.Value))
@@ -22,8 +24,8 @@ namespace TrainStation.Application.Services.Mapping
                 .ForMember(dest => dest.TariffZones, opt => opt.MapFrom(src => src.TariffZones));
 
             CreateMap<Buyer, BuyerModel>()
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName.Value))
-                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName.Value))
+                .ForMember(dest => dest.BuyerLastName, opt => opt.MapFrom(src => src.LastName.Value))
+                .ForMember(dest => dest.BuyerFirstName, opt => opt.MapFrom(src => src.FirstName.Value))
                 .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.BuyerTickets));
 
             CreateMap<Route, RouteModel>()
@@ -35,9 +37,12 @@ namespace TrainStation.Application.Services.Mapping
                 .ForMember(dest => dest.StationStatus, opt => opt.MapFrom(src => src.StationStatus));
 
             CreateMap<Tariffes, TariffZoneModel>()
-                .ForMember(dest => dest.TarifZoneName, opt => opt.MapFrom(src => src.TariffName.Value))
+                .ForMember(dest => dest.TarifZoneName, opt => opt.MapFrom(src => src.TariffName))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
                 .ForMember(dest => dest.Distance, opt => opt.MapFrom(src => src.Distance.Value));
+
+            CreateMap<TarifZoneNames, int>().ConstructUsing(x => x.Value);
+            CreateMap<int, TarifZoneNames>().ConstructUsing(src => new TarifZoneNames(src));
 
             CreateMap<Ticket, TicketModel>()
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))

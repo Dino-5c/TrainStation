@@ -31,14 +31,14 @@ namespace TrainSation.WebHost.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TariffZoneShortResponce>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TariffZoneDetailedResponce>))]
         public async Task<IActionResult> GetAllTariffZones(CancellationToken cancellationToken)
         {
             var tariffZones = await tariffZoneApplicationService.GetModelsAsync(cancellationToken);
-            return Ok(mapper.Map<IEnumerable<TariffZoneShortResponce>>(tariffZones));
+            return Ok(mapper.Map<IEnumerable<TariffZoneDetailedResponce>>(tariffZones));
         }
 
-        [HttpPost]
+        [HttpPost("RecordToDB")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TariffZoneShortResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateTariffZone(CreateTariffZoneRequest request, CancellationToken cancellationToken)
@@ -51,7 +51,7 @@ namespace TrainSation.WebHost.Controllers
             return CreatedAtAction(nameof(GetTariffZoneById), new { tariffZoneResponce.id }, tariffZoneResponce);
         }
 
-        [HttpPatch]// Редактирование
+        [HttpPatch("Redact")]// Редактирование
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TariffZoneDetailedResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -61,15 +61,16 @@ namespace TrainSation.WebHost.Controllers
             if (tariffZone is null)
                 return NotFound($"Tariff Zone with id:{request.Id} not found");
 
+            var newTariffZone = mapper.Map<TariffZoneModel>(request); // Новый объект тарифной зоны, требующийся для обновления
 
-            var isTariffZoneUpdated = await tariffZoneApplicationService.UpdateModelAsync(tariffZone, cancellationToken);
+            var isTariffZoneUpdated = await tariffZoneApplicationService.UpdateModelAsync(newTariffZone, cancellationToken);
             if (isTariffZoneUpdated == false)
                 return BadRequest($"Tariff Zone can not be redact");
-            var tariffZoneResponce = mapper.Map<TariffZoneDetailedResponce>(tariffZone);
-            return Ok(tariffZoneResponce) /* CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, ) */;
+            var tariffZoneResponce = await tariffZoneApplicationService.GetModelByIdAsync(request.Id, cancellationToken);
+            return Ok( mapper.Map<TariffZoneDetailedResponce>(tariffZone)) /* CreatedAtAction(nameof(GetAdministratorById), new { administratorResponce.Id }, ) */;
         }
 
-        [HttpDelete] // Удалить экземпляр тарифной зоны
+        [HttpDelete("Delete")] // Удалить экземпляр тарифной зоны
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TariffZoneDetailedResponce))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
